@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Таблица контаков{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/table.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div>
+        <table>
+            <tr>
+                <td>id</td>
+                <td>email</td>
+                <td>subject</td>
+                <td>message</td>
+            </tr>
+            {% for rate in rates %}
+                <tr>
+                    <td>{{ rate.id }}</td>
+                    <td>{{ rate.email_from }}</td>
+                    <td>{{ rate.subject }}</td>
+                    <td>{{ rate.message }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
