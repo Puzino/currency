@@ -1,7 +1,6 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 
-from currency.models import ContactUs
+from .models import ContactUs
 
 
 def hello_world(request):
