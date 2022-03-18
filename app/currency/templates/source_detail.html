@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Просмотр ресурса{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/table.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div>
+        <h3>Просмотр ресурса №{{ source.id }}.</h3>
+        <table>
+            <tr>
+                <td>id</td>
+                <td>name</td>
+                <td>source_url</td>
+            </tr>
+            <tr>
+                <td>{{ source.id }}</td>
+                <td>{{ source.name }}</td>
+                <td>{{ source.source_url }}</td>
+                <td><a href="/source/edit/{{ source.id }}/">Edit</a></td>
+                <td><a href="/source/delete/{{ source.id }}/" style="color: red;">Delete</a></td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
