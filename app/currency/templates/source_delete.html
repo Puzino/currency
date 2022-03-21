@@ -5,7 +5,7 @@
 {% block title %}Удалить ресурс{% endblock %}
 
 {% block head %}
-
+    <link rel="stylesheet" href="{% static 'css/table.css' %}">
 {% endblock %}
 
 {% block body %}
@@ -13,6 +13,19 @@
     <form method="post">
         {% csrf_token %}
         <h3>Вы уверенны что хотите удалить ресурс: №{{ source.id }}?</h3>
+        <table>
+            <tr>
+                <td>id</td>
+                <td>name</td>
+                <td>source_url</td>
+            </tr>
+            <tr>
+                <td>{{ source.id }}</td>
+                <td>{{ source.name }}</td>
+                <td>{{ source.source_url }}</td>
+            </tr>
+        </table>
+        <br>
         <button type="submit" style="color: red; width: 90px; height: 40px;">Да</button>
     </form>
 {% endblock %}
