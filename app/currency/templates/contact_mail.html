@@ -2,12 +2,14 @@
 
 {% load static %}
 
-{% block title %}Создать ресурс{% endblock %}
+{% block title %}Отправить сообщение{% endblock %}
 
-{% block head %}{% endblock %}
+{% block head %}
+
+{% endblock %}
 
 {% block body %}
-    <h3>Форма создания ресурса.</h3>
+    <h3>Форма отправки сообщения.</h3>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}

@@ -21,8 +21,10 @@
                 <td>{{ source.id }}</td>
                 <td>{{ source.name }}</td>
                 <td>{{ source.source_url }}</td>
-                <td><a href="{% url 'currency:source_edit' source.id %}">Edit</a></td>
-                <td><a href="{% url 'currency:source_delete' source.id %}" style="color: red;">Delete</a></td>
+                {% if request.user.is_superuser %}
+                    <td><a href="{% url 'currency:source_edit' source.id %}">Edit</a></td>
+                    <td><a href="{% url 'currency:source_delete' source.id %}" style="color: red;">Delete</a></td>
+                {% endif %}
             </tr>
         </table>
     </div>

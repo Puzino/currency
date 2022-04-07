@@ -3,5 +3,17 @@
     <a href="{% url 'currency:contact_us_list' %}">Таблица контактов</a>
     <a href="{% url 'currency:rate_list' %}">Таблица рейтов</a>
     <a href="{% url 'currency:source_list' %}">Таблица ресурсов</a>
+    <a href="{% url 'currency:contact_us_create' %}">Отправка сообщения</a>
+    <br>
+
+    {% if request.user.is_authenticated %}
+        <p>User: {{ request.user }}. ID: {{ request.user.id }}. First name: {{ request.user.first_name }}. Last
+            name: {{ request.user.last_name }}. email: {{ request.user.email }}.</p>
+        <a href="{% url 'accounts:my_profile' %}">Профиль</a>
+        <a href="{% url 'logout' %}">Выйти</a>
+    {% else %}
+        <a href="">Регистрация</a>
+        <a href="{% url 'login' %}">Вход</a>
+    {% endif %}
     <hr>
 </nav>

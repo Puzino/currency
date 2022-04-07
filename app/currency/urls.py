@@ -12,4 +12,6 @@ urlpatterns = [
     path('source/edit/<int:pk>/', currency_views.SourceEdit.as_view(), name='source_edit'),
     path('source/detail/<int:pk>/', currency_views.SourceDetail.as_view(), name='source_detail'),
     path('source/delete/<int:pk>/', currency_views.SourceDelete.as_view(), name='source_delete'),
+
+    path('contact-us/create/', currency_views.ContactUsCreateView.as_view(), name='contact_us_create')
 ]
