@@ -7,6 +7,7 @@
     <br>
 
     {% if request.user.is_authenticated %}
+        <hr>
         <p>User: {{ request.user }}. ID: {{ request.user.id }}. First name: {{ request.user.first_name }}. Last
             name: {{ request.user.last_name }}. email: {{ request.user.email }}.</p>
         <a href="{% url 'accounts:my_profile' %}">Профиль</a>

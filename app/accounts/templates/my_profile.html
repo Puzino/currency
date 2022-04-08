@@ -10,7 +10,6 @@
 
 {% block body %}
     <h3>Форма редактирования профиля</h3>
-    <hr>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}

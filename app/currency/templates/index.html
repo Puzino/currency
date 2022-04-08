@@ -4,7 +4,7 @@
 
 {% block body %}
     {% if request.user.is_authenticated %}
-        <h1>Hello, {{ request.user }}!</h1>
+        <h1>Hello, {{ request.user.first_name }}!</h1>
     {% else %}
         <h1>Hello, World!</h1>
     {% endif %}
