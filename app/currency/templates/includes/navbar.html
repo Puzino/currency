@@ -13,7 +13,7 @@
         <a href="{% url 'accounts:my_profile' %}">Профиль</a>
         <a href="{% url 'logout' %}">Выйти</a>
     {% else %}
-        <a href="">Регистрация</a>
+        <a href="{% url 'accounts:signup' %}">Регистрация</a>
         <a href="{% url 'login' %}">Вход</a>
     {% endif %}
     <hr>

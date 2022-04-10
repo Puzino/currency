@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
-from .forms import SourceForm
+from .forms import RateForm, SourceForm
 from .models import ContactUs, ContactUsCreate, Rate, Source
 
 
@@ -14,8 +14,15 @@ class ContactUsList(ListView):
 
 
 class RateList(ListView):
-    queryset = Rate.objects.all().order_by('-id')
+    queryset = Rate.objects.all().order_by('-id').select_related('source')
     template_name = 'rate_list.html'
+
+
+class RateCreate(CreateView):
+    model = Rate
+    template_name = 'rate_create.html'
+    form_class = RateForm
+    success_url = reverse_lazy('currency:rate_list')
 
 
 class SourceList(ListView):

@@ -1,5 +1,7 @@
 from django.db import models
 
+from currency import model_choises as mch  # noqa: I100
+
 
 class ContactUs(models.Model):
     email_from = models.CharField(max_length=60)
@@ -7,17 +9,20 @@ class ContactUs(models.Model):
     message = models.CharField(max_length=2000)
 
 
-class Rate(models.Model):
-    type = models.CharField(max_length=5)  # noqa: A003 VNE003
-    source = models.CharField(max_length=64)
-    created = models.DateTimeField()
-    buy = models.DecimalField(max_digits=10, decimal_places=2)
-    sale = models.DecimalField(max_digits=10, decimal_places=2)
-
-
 class Source(models.Model):
     source_url = models.CharField(max_length=255)
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Rate(models.Model):
+    type = models.CharField(max_length=5, choices=mch.TYPES_RATE)  # noqa: A003 VNE003
+    created = models.DateTimeField(auto_now_add=True)
+    buy = models.DecimalField(max_digits=10, decimal_places=2)
+    sale = models.DecimalField(max_digits=10, decimal_places=2)
+    source = models.ForeignKey(Source, on_delete=models.CASCADE, null=True, default=True)
 
 
 class ContactUsCreate(models.Model):
