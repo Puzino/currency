@@ -1,16 +1,13 @@
 from django.contrib import admin
-from django.urls import path
-
-from currency import views as currency_views  # noqa: I100
+from django.urls import include, path
+from django.views.generic import TemplateView
 
 urlpatterns = [
+    path('auth/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
-    path('', currency_views.hello_world),
-    path('contact_us/list/', currency_views.contact_us_list),
-    path('rate/list/', currency_views.rate_list),
-    path('source/list/', currency_views.source_list),
-    path('source/create/', currency_views.source_create),
-    path('source/detail/<int:pk>/', currency_views.source_detail),
-    path('source/delete/<int:pk>/', currency_views.source_delete),
-    path('source/edit/<int:pk>/', currency_views.source_edit),
+    path('', TemplateView.as_view(template_name='index.html'), name='index'),
+
+    path('accounts/', include('accounts.urls')),
+    path('currency/', include('currency.urls')),
+    path('__debug__/', include('debug_toolbar.urls')),
 ]

@@ -1,7 +1,20 @@
 <nav>
-    <a href="/">Главная страница</a>
-    <a href="/contact_us/list/">Таблица контактов</a>
-    <a href="/rate/list/">Таблица рейтов</a>
-    <a href="/source/list/">Таблица ресурсов</a>
+    <a href="{% url 'index' %}">Главная страница</a>
+    <a href="{% url 'currency:contact_us_list' %}">Таблица контактов</a>
+    <a href="{% url 'currency:rate_list' %}">Таблица рейтов</a>
+    <a href="{% url 'currency:source_list' %}">Таблица ресурсов</a>
+    <a href="{% url 'currency:contact_us_create' %}">Отправка сообщения</a>
+    <br>
+
+    {% if request.user.is_authenticated %}
+        <hr>
+        <p>User: {{ request.user }}. ID: {{ request.user.id }}. First name: {{ request.user.first_name }}. Last
+            name: {{ request.user.last_name }}. email: {{ request.user.email }}.</p>
+        <a href="{% url 'accounts:my_profile' %}">Профиль</a>
+        <a href="{% url 'logout' %}">Выйти</a>
+    {% else %}
+        <a href="{% url 'accounts:signup' %}">Регистрация</a>
+        <a href="{% url 'login' %}">Вход</a>
+    {% endif %}
     <hr>
 </nav>

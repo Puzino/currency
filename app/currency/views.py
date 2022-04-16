@@ -1,61 +1,96 @@
-from django.shortcuts import HttpResponseRedirect, get_object_or_404, render
+from django.conf import settings
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.core.mail import send_mail
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
-from .forms import SourceForm
-from .models import ContactUs, Rate, Source
-
-
-def hello_world(request):
-    return render(request, 'index.html')
-
-
-def contact_us_list(request):
-    rates = ContactUs.objects.all().order_by('-id')
-    return render(request, 'contactus_list.html', context={'rates': rates})
+from .forms import RateForm, SourceForm
+from .models import ContactUs, ContactUsCreate, Rate, Source
 
 
-def rate_list(request):
-    rates = Rate.objects.all().order_by('-id')
-    return render(request, 'rate_list.html', context={'rates': rates})
+class ContactUsList(ListView):
+    queryset = ContactUs.objects.all().order_by('-id')
+    template_name = 'contactus_list.html'
 
 
-def source_list(request):
-    source = Source.objects.all().order_by('-id')
-    return render(request, 'source_list.html', context={'source': source})
+class RateList(ListView):
+    queryset = Rate.objects.all().order_by('-id').select_related('source')
+    template_name = 'rate_list.html'
 
 
-def source_create(request):
-    if request.method == "POST":
-        form = SourceForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.save()
-            return HttpResponseRedirect('/source/list/')
-    else:
-        form = SourceForm()
-    return render(request, 'source_create.html', {'form': form})
+class RateCreate(CreateView):
+    model = Rate
+    template_name = 'rate_create.html'
+    form_class = RateForm
+    success_url = reverse_lazy('currency:rate_list')
 
 
-def source_detail(request, pk):
-    source = get_object_or_404(Source, pk=pk)
-    return render(request, 'source_detail.html', context={'source': source})
+class SourceList(ListView):
+    queryset = Source.objects.all().order_by('-id')
+    template_name = 'source_list.html'
 
 
-def source_edit(request, pk):
-    source = get_object_or_404(Source, pk=pk)
-    if request.method == "POST":
-        form = SourceForm(request.POST, instance=source)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.save()
-            return HttpResponseRedirect('/source/list/')
-    else:
-        form = SourceForm(instance=source)
-    return render(request, 'source_edit.html', context={'form': form})
+class SourceCreate(CreateView):
+    model = Source
+    template_name = 'source_create.html'
+    form_class = SourceForm
+    success_url = reverse_lazy('currency:source_list')
 
 
-def source_delete(request, pk):
-    source = get_object_or_404(Source, pk=pk)
-    if request.method == 'POST':
-        source.delete()
-        return HttpResponseRedirect('/source/list/')
-    return render(request, 'source_delete.html', context={'source': source})
+class SourceEdit(UserPassesTestMixin, UpdateView):
+    model = Source
+    template_name = 'source_edit.html'
+    form_class = SourceForm
+    success_url = reverse_lazy('currency:source_list')
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+
+class SourceDelete(UserPassesTestMixin, DeleteView):
+    queryset = Source.objects.all()
+    template_name = 'source_delete.html'
+    success_url = reverse_lazy('currency:source_list')
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+
+class SourceDetail(DetailView):
+    model = Source
+    template_name = 'source_detail.html'
+
+
+class ContactUsCreateView(CreateView):
+    model = ContactUsCreate
+    template_name = 'contact_mail.html'
+    success_url = reverse_lazy('index')
+    fields = (
+        'name',
+        'reply_to',
+        'subject',
+        'body'
+    )
+
+    def _send_email(self):
+        recipient = settings.EMAIL_HOST_USER
+        subject = 'User Contact'
+        body = f'''
+            Request From: {self.object.name}
+            Email to reply: {self.object.reply_to}
+            Subject: {self.object.subject}
+
+            Body: {self.object.body}
+        '''
+        send_mail(
+            subject,
+            body,
+            recipient,
+            [recipient],
+            fail_silently=False,
+        )
+
+    def form_valid(self, form):
+        redirect = super().form_valid(form)
+        self._send_email()
+        return redirect
