@@ -1,20 +1,36 @@
-<nav>
-    <a href="{% url 'index' %}">Главная страница</a>
-    <a href="{% url 'currency:contact_us_list' %}">Таблица контактов</a>
-    <a href="{% url 'currency:rate_list' %}">Таблица рейтов</a>
-    <a href="{% url 'currency:source_list' %}">Таблица ресурсов</a>
-    <a href="{% url 'currency:contact_us_create' %}">Отправка сообщения</a>
-    <br>
-
-    {% if request.user.is_authenticated %}
-        <hr>
-        <p>User: {{ request.user }}. ID: {{ request.user.id }}. First name: {{ request.user.first_name }}. Last
-            name: {{ request.user.last_name }}. email: {{ request.user.email }}.</p>
-        <a href="{% url 'accounts:my_profile' %}">Профиль</a>
-        <a href="{% url 'logout' %}">Выйти</a>
-    {% else %}
-        <a href="{% url 'accounts:signup' %}">Регистрация</a>
-        <a href="{% url 'login' %}">Вход</a>
-    {% endif %}
-    <hr>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'index' %}">Главная страница</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'currency:contact_us_list' %}">Таблица
+                        контактов</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'currency:rate_list' %}">Таблица рейтов</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'currency:source_list' %}">Таблица ресурсов</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'currency:contact_us_create' %}">Отправка сообщения</a>
+                </li>
+            </ul>
+            <span class="navbar-text">
+                {% if request.user.is_authenticated %}
+                    <img src="{{ request.user.avatar_url }}" style="width: 37px; height: 37px; border: black 1px solid;" class="rounded">
+                    <a href="{% url 'accounts:my_profile' %}" class="btn btn-outline-info">Профиль</a>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger">Выйти</a>
+                {% else %}
+                    <a href="{% url 'accounts:signup' %}" class="btn btn-outline-success">Регистрация</a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-primary">Вход</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
 </nav>

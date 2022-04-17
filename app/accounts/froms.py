@@ -6,6 +6,22 @@ from django.urls import reverse
 from accounts.models import User  # noqa: I100
 
 
+def _send_activate_email(user):
+    subject = 'Регистрация'
+    message_body = f'''
+    Activated Link:
+    {settings.HTTP_SCHEMA}://{settings.DOMAIN}{reverse('accounts:activate_user', args=[user.username])}
+    '''
+    email_from = settings.EMAIL_HOST_USER
+    send_mail(
+        subject,
+        message_body,
+        email_from,
+        [user.email],
+        fail_silently=False,
+    )
+
+
 class SignUpForm(forms.ModelForm):
     password1 = forms.CharField(required=True, widget=forms.PasswordInput)
     password2 = forms.CharField(required=True, widget=forms.PasswordInput)
@@ -32,21 +48,6 @@ class SignUpForm(forms.ModelForm):
         if commit:
             user.save()
 
-        self._send_activate_email(user)
+        _send_activate_email(user)
 
         return user
-
-    def _send_activate_email(self, user):
-        subject = 'Регистрация'
-        message_body = f'''
-                Activatod Link:
-                {settings.HTTP_SCHEME}://{settings.DOMAIN}{reverse('accounts:activate_user', args=[user.username])}
-                '''
-        recipient = settings.EMAIL_HOST_USER
-        send_mail(
-            subject,
-            message_body,
-            recipient,
-            [user.email],
-            fail_silently=False,
-        )

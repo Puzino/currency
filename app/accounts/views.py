@@ -14,7 +14,8 @@ class MyProfile(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('index')
     fields = (
         'first_name',
-        'last_name'
+        'last_name',
+        'avatar',
     )
 
     def get_object(self, queryset=None):
@@ -24,12 +25,12 @@ class MyProfile(LoginRequiredMixin, UpdateView):
 class SignUp(CreateView):
     queryset = User.objects.all()
     template_name = 'signup.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('accounts:email_confirm')
     form_class = SignUpForm
 
 
 class ActivateUser(RedirectView):
-    url = reverse_lazy('index')
+    url = reverse_lazy('accounts:confirm')
 
     def get_redirect_url(self, username):
         user = get_object_or_404(User, username=username)

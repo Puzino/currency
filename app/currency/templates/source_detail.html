@@ -4,26 +4,44 @@
 
 {% block title %}Просмотр ресурса{% endblock %}
 
-{% block head %}
-    <link rel="stylesheet" href="{% static 'css/table.css' %}">
-{% endblock %}
+{% block head %}{% endblock %}
 
 {% block body %}
     <div>
         <h3>Просмотр ресурса №{{ source.id }}.</h3>
-        <table>
+        <table class="table table-hover">
             <tr>
                 <td>id</td>
                 <td>name</td>
                 <td>source_url</td>
+                {% if request.user.is_superuser %}
+                    <td>Action</td>
+                {% endif %}
             </tr>
             <tr>
                 <td>{{ source.id }}</td>
-                <td>{{ source.name }}</td>
+                <td><img src="{{ source.logotype_url }}" style="width: 30px; height: 30px;"> {{ source.name }}</td>
                 <td>{{ source.source_url }}</td>
                 {% if request.user.is_superuser %}
-                    <td><a href="{% url 'currency:source_edit' source.id %}">Edit</a></td>
-                    <td><a href="{% url 'currency:source_delete' source.id %}" style="color: red;">Delete</a></td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                Action
+                            </button>
+                            <ul class="dropdown-menu">
+
+                                <li><a class="dropdown-item"
+
+                                       href="{% url 'currency:source_edit' source.id %}">Edit</a>
+                                </li>
+                                <hr class="dropdown-divider">
+                                <li><a class="dropdown-item" href="{% url 'currency:source_delete' source.id %}"
+                                       style="color: red;">Delete</a></li>
+
+                            </ul>
+                        </div>
+                    </td>
                 {% endif %}
             </tr>
         </table>

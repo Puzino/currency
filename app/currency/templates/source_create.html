@@ -2,15 +2,19 @@
 
 {% load static %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Создать ресурс{% endblock %}
 
 {% block head %}{% endblock %}
 
+
 {% block body %}
     <h3>Форма создания ресурса.</h3>
-    <form method="POST">
+    <form method="post" class="uniForm" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" style="width: 90px; height: 40px;">Save</button>
+        {{ form|crispy }}
+        <br>
+        <button type="submit" class="btn btn-outline-success btn-lg">Сохранить</button>
     </form>
 {% endblock %}

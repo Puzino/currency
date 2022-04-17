@@ -4,8 +4,8 @@
 
 {% block body %}
     {% if request.user.is_authenticated %}
-        <h1>Hello, {{ request.user.first_name }}!</h1>
+        <h1>Привет, {{ request.user.first_name }}!</h1>
     {% else %}
-        <h1>Hello, World!</h1>
+        <h1>Привет!</h1>
     {% endif %}
 {% endblock %}
