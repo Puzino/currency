@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block title %}Создать аккаунт{% endblock %}
 
@@ -10,7 +11,8 @@
     <h3>Создание аккаунта</h3>
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" style="width: 90px; height: 40px;">Создать</button>
+        {{ form|crispy }}
+        <br>
+        <button type="submit" class="btn btn-outline-success btn-lg">Создать</button>
     </form>
 {% endblock %}

@@ -1,4 +1,5 @@
 from django.db import models
+from django.templatetags.static import static
 
 from currency import model_choises as mch  # noqa: I100
 
@@ -9,12 +10,22 @@ class ContactUs(models.Model):
     message = models.CharField(max_length=2000)
 
 
+def upload_logotype(instance, filename: str) -> str:
+    return f'{instance}/logotype/{filename}'
+
+
 class Source(models.Model):
     source_url = models.CharField(max_length=255)
     name = models.CharField(max_length=64, unique=True)
+    logotype = models.FileField(upload_to=upload_logotype, default=None, null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+    def logotype_url(self):
+        if self.logotype:
+            return self.logotype.url
+        return static('img/bank.png')
 
 
 class Rate(models.Model):

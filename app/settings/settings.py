@@ -28,10 +28,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
 
+    'crispy_forms',
     'accounts',
     'currency',
     'debug_toolbar',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -119,7 +122,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
@@ -141,3 +143,6 @@ AUTH_USER_MODEL = 'accounts.User'
 # Custom settings
 DOMAIN = 'localhost:8000'
 HTTP_SCHEMA = 'http'
+
+MEDIA_ROOT = BASE_DIR / '..' / 'static_content' / 'media'
+MEDIA_URL = '/media/'
