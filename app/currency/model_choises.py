@@ -1,7 +1,11 @@
-TYPE_USD = 'USD'
-TYPE_EUR = 'EUR'
+from django.db import models
 
-TYPES_RATE = [
-    (TYPE_EUR, 'Euro'),
-    (TYPE_USD, 'Dollar'),
-]
+
+class RateType(models.TextChoices):
+    USD = 'USD', 'Dollar'
+    EUR = 'EUR', 'Euro'
+
+
+class SourceCodeName(models.IntegerChoices):
+    PRIVATBANK = 1, 'PrivatBank'
+    MONOBANK = 2, 'MonoBank'

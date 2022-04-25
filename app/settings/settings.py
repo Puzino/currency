@@ -1,8 +1,11 @@
 import os
 from pathlib import Path
 
+from celery.schedules import crontab
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from django.urls import reverse_lazy
+
+from .settings_local import *
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -126,8 +129,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'dhuan887@gmail.com'
-EMAIL_HOST_PASSWORD = 'dhuan123098'
+EMAIL_HOST_USER = 'huliohuas@gmail.com'
+EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
 DEFAULT_FROM_EMAIL = 'TestSite Team <noreply@example.com>'
 
 if DEBUG:
@@ -146,3 +149,11 @@ HTTP_SCHEMA = 'http'
 
 MEDIA_ROOT = BASE_DIR / '..' / 'static_content' / 'media'
 MEDIA_URL = '/media/'
+
+CELERY_BROKER_URL = f'amqp://guest:guest@localhost:5672//'
+CELERY_BEAT_SCHEDULE = {
+    'parse_privatbank': {
+        'task': 'currency.tasks.parse_privatbank',
+        'schedule': crontab(minute='*/1')
+    },
+}
