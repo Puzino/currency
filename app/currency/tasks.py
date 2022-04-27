@@ -2,8 +2,24 @@ import requests
 from celery import shared_task
 
 from bs4 import BeautifulSoup
-
+from currency.utils import round_decimal
 from currency import model_choises as mch
+from django.core.mail import send_mail
+from django.conf import settings
+
+
+@shared_task(
+    autoretry_for=(ConnectionError,),
+    retry_kwargs={'max_retries': 5},
+)
+def send_email_in_background(subject, body):
+    send_mail(
+        subject,
+        body,
+        settings.DEFAULT_FROM_EMAIL,
+        [settings.DEFAULT_FROM_EMAIL],
+        fail_silently=False,
+    )
 
 
 @shared_task()
@@ -19,21 +35,23 @@ def parse_privatbank():
         'EUR': mch.RateType.EUR,
         'UAH': mch.RateType.UAH,
     }
-
-    source = Source.objects.get_or_create(code_name=mch.SourceCodeName.PRIVATBANK)[0]
+    source = Source.objects.get_or_create(code_name=mch.SourceCodeName.PRIVATBANK, name='PrivatBank')[0]
 
     for rate in rates:
         currency_type = available_currencies.get(rate['ccy'])
         if not currency_type:
             continue
 
-        sale = rate['sale']
-        buy = rate['buy']
-
-        last_rate = Rate.objects.filter(source=source, type=currency_type).order_by('-created').first()
-
         base_currency_type = available_currencies.get(rate['base_ccy'])
-        if (last_rate is None or
+
+        sale = round_decimal(rate["sale"])
+        buy = round_decimal(rate['buy'])
+
+        last_rate = Rate.objects \
+            .filter(source=source, type=currency_type) \
+            .order_by('-created').first()
+
+        if (last_rate is None or  # does not exist in table
                 last_rate.sale != sale or
                 last_rate.buy != buy):
             Rate.objects.create(
@@ -48,7 +66,6 @@ def parse_privatbank():
 @shared_task()
 def parse_monobank():
     from currency.models import Rate, Source
-    # парс каждые 5 минут
     url = 'https://api.monobank.ua/bank/currency'
     response = requests.get(url)
     response.raise_for_status()
@@ -58,15 +75,15 @@ def parse_monobank():
         978: mch.RateType.EUR,
     }
 
-    source = Source.objects.get_or_create(code_name=mch.SourceCodeName.MONOBANK)[0]
+    source = Source.objects.get_or_create(code_name=mch.SourceCodeName.MONOBANK, name='MonoBank')[0]
 
     for rate in rates[:2]:
         currency_type = available_currencies.get(rate['currencyCodeA'])
         if not currency_type:
             continue
 
-        sale = rate['rateSell']
-        buy = rate['rateBuy']
+        sale = round_decimal(rate['rateSell'])
+        buy = round_decimal(rate['rateBuy'])
 
         last_rate = Rate.objects.filter(source=source, type=currency_type).order_by('-created').first()
 
@@ -75,6 +92,7 @@ def parse_monobank():
                 last_rate.buy != buy):
             Rate.objects.create(
                 type=currency_type,
+                base_type=mch.RateType.UAH,
                 sale=sale,
                 buy=buy,
                 source=source,
@@ -93,7 +111,7 @@ def parse_vkurse():
         'Euro': mch.RateType.EUR,
     }
 
-    source = Source.objects.get_or_create(code_name=mch.SourceCodeName.VKURSE)[0]
+    source = Source.objects.get_or_create(code_name=mch.SourceCodeName.VKURSE, name='Vkurse')[0]
 
     for rate in rates:
         currency_type = available_currencies.get(rate)
@@ -128,7 +146,7 @@ def parse_nbu():
         'EUR': mch.RateType.EUR,
     }
 
-    source = Source.objects.get_or_create(code_name=mch.SourceCodeName.NBU)[0]
+    source = Source.objects.get_or_create(code_name=mch.SourceCodeName.NBU, name='NBU')[0]
 
     for rate in rates:
         currency_type = available_currencies.get(rate['cc'])
@@ -164,7 +182,7 @@ def parse_credit_agricole():
         'EUR': mch.RateType.EUR,
     }
 
-    source = Source.objects.get_or_create(code_name=mch.SourceCodeName.AGRIGOLE)[0]
+    source = Source.objects.get_or_create(code_name=mch.SourceCodeName.AGRIGOLE, name='Credit-Agricole')[0]
 
     kurs = rates.find('div', class_="exchange-rates-table")
     currency = kurs.find_all('div', class_="currency")

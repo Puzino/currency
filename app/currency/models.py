@@ -30,12 +30,12 @@ class Source(models.Model):
 
 
 class Rate(models.Model):
-    type = models.CharField(max_length=5, choices=mch.RateType.choices)  # noqa: A003 VNE003
+    type = models.CharField(max_length=5, choices=mch.RateType.choices)  # noqa: A003
     base_type = models.CharField(max_length=5, choices=mch.RateType.choices, default=mch.RateType.UAH)
     created = models.DateTimeField(auto_now_add=True)
     buy = models.DecimalField(max_digits=10, decimal_places=2)
     sale = models.DecimalField(max_digits=10, decimal_places=2)
-    source = models.ForeignKey(Source, on_delete=models.CASCADE, null=True, default=True)
+    source = models.ForeignKey(Source, on_delete=models.CASCADE, related_name='rates')
 
 
 class ContactUsCreate(models.Model):
