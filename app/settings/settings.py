@@ -2,10 +2,10 @@ import os
 from pathlib import Path
 
 from celery.schedules import crontab
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 from django.urls import reverse_lazy
 
-from .settings_local import *
+from .settings_local import EMAIL_PASSWORD
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -150,7 +150,7 @@ HTTP_SCHEMA = 'http'
 MEDIA_ROOT = BASE_DIR / '..' / 'static_content' / 'media'
 MEDIA_URL = '/media/'
 
-CELERY_BROKER_URL = f'amqp://guest:guest@localhost:5672//'
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 CELERY_BEAT_SCHEDULE = {
     'parse_privatbank': {
         'task': 'currency.tasks.parse_privatbank',

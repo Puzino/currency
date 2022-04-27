@@ -1,25 +1,11 @@
-import requests
+from bs4 import BeautifulSoup
+
 from celery import shared_task
 
-from bs4 import BeautifulSoup
-from currency.utils import round_decimal
 from currency import model_choises as mch
-from django.core.mail import send_mail
-from django.conf import settings
+from currency.utils import round_decimal
 
-
-@shared_task(
-    autoretry_for=(ConnectionError,),
-    retry_kwargs={'max_retries': 5},
-)
-def send_email_in_background(subject, body):
-    send_mail(
-        subject,
-        body,
-        settings.DEFAULT_FROM_EMAIL,
-        [settings.DEFAULT_FROM_EMAIL],
-        fail_silently=False,
-    )
+import requests
 
 
 @shared_task()
@@ -73,6 +59,8 @@ def parse_monobank():
     available_currencies = {
         840: mch.RateType.USD,
         978: mch.RateType.EUR,
+        980: mch.RateType.UAH
+
     }
 
     source = Source.objects.get_or_create(code_name=mch.SourceCodeName.MONOBANK, name='MonoBank')[0]
@@ -81,6 +69,8 @@ def parse_monobank():
         currency_type = available_currencies.get(rate['currencyCodeA'])
         if not currency_type:
             continue
+
+        base_currency_type = available_currencies.get(rate['currencyCodeB'])
 
         sale = round_decimal(rate['rateSell'])
         buy = round_decimal(rate['rateBuy'])
@@ -92,7 +82,7 @@ def parse_monobank():
                 last_rate.buy != buy):
             Rate.objects.create(
                 type=currency_type,
-                base_type=mch.RateType.UAH,
+                base_type=base_currency_type,
                 sale=sale,
                 buy=buy,
                 source=source,

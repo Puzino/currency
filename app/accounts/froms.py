@@ -4,22 +4,6 @@ from accounts.models import User  # noqa: I100
 from accounts.tasks import send_activate_email
 
 
-# def _send_activate_email(user):
-#     subject = 'Регистрация'
-#     message_body = f'''
-#     Activated Link:
-#     {settings.HTTP_SCHEMA}://{settings.DOMAIN}{reverse('accounts:activate_user', args=[user.username])}
-#     '''
-#     email_from = settings.EMAIL_HOST_USER
-#     send_mail(
-#         subject,
-#         message_body,
-#         email_from,
-#         [user.email],
-#         fail_silently=False,
-#     )
-
-
 class SignUpForm(forms.ModelForm):
     password1 = forms.CharField(required=True, widget=forms.PasswordInput)
     password2 = forms.CharField(required=True, widget=forms.PasswordInput)
@@ -47,6 +31,5 @@ class SignUpForm(forms.ModelForm):
             user.save()
 
         send_activate_email.delay(user.username, user.email)
-        # _send_activate_email(user)
 
         return user

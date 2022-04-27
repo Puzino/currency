@@ -15,7 +15,7 @@ run:
 	$(manage_py) runserver
 
 worker:
-	cd app && celery -A settings worker -l info --pool threads -c 1,10
+	cd app && celery -A settings worker -l info
 
 beat:
 	cd app && celery -A settings beat -l info

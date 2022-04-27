@@ -7,7 +7,7 @@ from django.urls import reverse
 
 @shared_task()
 def debug():
-    print('Hello From Celery Task')
+    print('Hello From Celery Task')  # noqa: T001
 
 
 @shared_task()
@@ -25,4 +25,3 @@ def send_activate_email(username: str, email: str):
         [email],
         fail_silently=False,
     )
-    print('-------------------------------------activate -------------------------------------')
