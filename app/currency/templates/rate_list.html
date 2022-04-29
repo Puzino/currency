@@ -15,6 +15,7 @@
             <tr>
                 <td>id</td>
                 <td>type</td>
+                <td>base type currency</td>
                 <td>source</td>
                 <td>created</td>
                 <td>buy</td>
@@ -23,9 +24,11 @@
             {% for rate in object_list %}
                 <tr>
                     <td>{{ rate.id }}</td>
-                    <td>{{ rate.type }}</td>
-                    <td><img src="{{ rate.source.logotype_url }}" style="width: 30px; height: 30px;"> {{ rate.source.name }}</td>
-                    <td>{{ rate.created|date:"Y-m-d" }}</td>
+                    <td>{{ rate.get_type_display }}</td>
+                    <td>{{ rate.get_base_type_display }}</td>
+                    <td><img src="{{ rate.source.logotype_url }}"
+                             style="width: 30px; height: 30px;"> {{ rate.source.name }}</td>
+                    <td>{{ rate.created|date:"Y-m-d"}}</td>
                     <td>{{ rate.buy }}</td>
                     <td>{{ rate.sale }}</td>
                 </tr>

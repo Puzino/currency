@@ -1,6 +1,9 @@
 SHELL := /bin/bash
 
-manage_py := python app\manage.py
+manage_py := python app/manage.py
+
+makemigrations:
+	$(manage_py) makemigrations
 
 migrate:
 	$(manage_py) migrate
@@ -10,3 +13,9 @@ shell:
 
 run:
 	$(manage_py) runserver
+
+worker:
+	cd app && celery -A settings worker -l info
+
+beat:
+	cd app && celery -A settings beat -l info

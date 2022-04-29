@@ -18,6 +18,7 @@ class Source(models.Model):
     source_url = models.CharField(max_length=255)
     name = models.CharField(max_length=64, unique=True)
     logotype = models.FileField(upload_to=upload_logotype, default=None, null=True, blank=True)
+    code_name = models.PositiveSmallIntegerField(choices=mch.SourceCodeName.choices, unique=True)
 
     def __str__(self):
         return self.name
@@ -29,11 +30,12 @@ class Source(models.Model):
 
 
 class Rate(models.Model):
-    type = models.CharField(max_length=5, choices=mch.TYPES_RATE)  # noqa: A003 VNE003
+    type = models.CharField(max_length=5, choices=mch.RateType.choices)  # noqa: A003 VNE003
+    base_type = models.CharField(max_length=5, choices=mch.RateType.choices, default=mch.RateType.UAH)
     created = models.DateTimeField(auto_now_add=True)
     buy = models.DecimalField(max_digits=10, decimal_places=2)
     sale = models.DecimalField(max_digits=10, decimal_places=2)
-    source = models.ForeignKey(Source, on_delete=models.CASCADE, null=True, default=True)
+    source = models.ForeignKey(Source, on_delete=models.CASCADE, related_name='rates')
 
 
 class ContactUsCreate(models.Model):
