@@ -5,6 +5,7 @@ from accounts.tasks import send_activate_email
 
 
 class SignUpForm(forms.ModelForm):
+
     password1 = forms.CharField(required=True, widget=forms.PasswordInput)
     password2 = forms.CharField(required=True, widget=forms.PasswordInput)
 
