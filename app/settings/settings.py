@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
 
+    'django_filters',
     'crispy_forms',
     'accounts',
     'currency',
