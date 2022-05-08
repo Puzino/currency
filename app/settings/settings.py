@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'accounts',
     'currency',
     'debug_toolbar',
+    'rest_framework',
+    'drf_yasg',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
