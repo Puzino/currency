@@ -6,11 +6,6 @@ from django.urls import reverse
 
 
 @shared_task()
-def debug():
-    print('Hello From Celery Task')  # noqa: T001
-
-
-@shared_task()
 def send_activate_email(username: str, email: str):
     subject = 'Регистрация'
     message_body = f'''

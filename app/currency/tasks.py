@@ -3,9 +3,36 @@ from bs4 import BeautifulSoup
 from celery import shared_task
 
 from currency import model_choises as mch
+from currency.models import ContactUs
 from currency.utils import round_decimal
 
+from django.conf import settings
+from django.core.mail import send_mail
+
 import requests
+
+
+@shared_task()
+def send_email(name, reply_to, subject, body):
+    recipient = settings.EMAIL_HOST_USER
+    message = f'''
+        Request From: {name}
+        Email to reply: {reply_to}
+        Subject: {subject}
+
+        Message: {body}
+    '''
+    send_mail(
+        subject,
+        message,
+        recipient,
+        [recipient],
+        fail_silently=False,
+    )
+
+    ContactUs.objects.create(email_from=reply_to,
+                             subject=subject,
+                             message=body)
 
 
 @shared_task()
