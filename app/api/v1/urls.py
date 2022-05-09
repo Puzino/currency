@@ -1,4 +1,4 @@
-from api import views
+from api.v1 import views
 
 from django.urls import path, re_path
 
@@ -7,8 +7,6 @@ from drf_yasg.views import get_schema_view
 
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
-
-app_name = 'api'
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -25,7 +23,6 @@ schema_view = get_schema_view(
 
 router = DefaultRouter()
 router.register('contacts', views.ContactViewSet, basename='contact')
-
 
 urlpatterns = [
     path('sources/', views.SourceView.as_view(), name='sources'),
