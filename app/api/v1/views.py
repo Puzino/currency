@@ -25,7 +25,6 @@ class SourceView(generics.ListAPIView):
         filters.DjangoFilterBackend,
         rest_framework_filters.OrderingFilter,
         rest_framework_filters.SearchFilter,
-        rest_framework_filters.SearchFilter,
     )
     ordering_fields = ('id',)
     search_fields = ['name', 'code_name', 'source_url']
