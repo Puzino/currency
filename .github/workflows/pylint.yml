@@ -21,4 +21,3 @@ jobs:
       - name: Analysing the code with pylint
         run: |
           flake8 app/
-          pytest app/tests/
