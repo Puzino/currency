@@ -36,7 +36,7 @@
                     <td>{{ rate.get_base_type_display }}</td>
                     <td><img src="{{ rate.source.logotype_url }}"
                              style="width: 30px; height: 30px;"> {{ rate.source.name }}</td>
-                    <td>{{ rate.created }}</td>
+                    <td>{{rate.created| date:"d.m.Y H:i:s"}}</td>
                     <td>{{ rate.buy }}</td>
                     <td>{{ rate.sale }}</td>
                 </tr>
