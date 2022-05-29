@@ -67,8 +67,8 @@ def test_parse_vkurse(mocker):
 
     # second, no change
     parse_vkurse()
-    # TODO разобраться почему добавляются лишние рейты.
-    assert Rate.objects.count() == rate_initial_count + 4
+
+    assert Rate.objects.count() == rate_initial_count + 2
     assert request_get_mock.call_count == 2
     assert request_get_mock.call_args[0] == ('http://vkurse.dp.ua/course.json',)
     assert request_get_mock.call_args[1] == {}
@@ -86,5 +86,5 @@ def test_parse_vkurse(mocker):
     )
     assert request_get_mock_2.call_count == 0
     parse_vkurse()
-    assert Rate.objects.count() == rate_initial_count + 5
+    assert Rate.objects.count() == rate_initial_count + 3
     assert request_get_mock_2.call_count == 1
