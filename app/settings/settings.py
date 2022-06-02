@@ -127,6 +127,8 @@ STATICFILES_DIRS = [
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
+
+# TODO перенести все пароли в os.environ
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -179,7 +181,6 @@ CELERY_BEAT_SCHEDULE = {
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PERMISSION_CLASSES': (),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
-
-MINUTES_BEFORE_ALLOW_DELETE_RATE = 60 * 24 * 365 * 100

@@ -134,8 +134,8 @@ def parse_vkurse():
         currency_type = available_currencies.get(rate)
         if not currency_type:
             continue
-        buy = rates.get(rate)['buy']
-        sale = rates.get(rate)['sale']
+        buy = round_decimal(rates.get(rate)['buy'])
+        sale = round_decimal(rates.get(rate)['sale'])
 
         last_rate = Rate.objects.filter(source=source, type=currency_type).order_by('-created').first()
 
