@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-manage_py := python app/manage.py
+manage_py := docker exec -it backend python app/manage.py
 
 makemigrations:
 	$(manage_py) makemigrations
@@ -8,11 +8,14 @@ makemigrations:
 migrate:
 	$(manage_py) migrate
 
+urls:
+	$(manage_py) show_urls
+
 shell:
 	$(manage_py) shell_plus --print-sql
 
 run:
-	$(manage_py) runserver
+	$(manage_py) runserver 0:8001
 
 worker:
 	cd app && celery -A settings worker -l info
